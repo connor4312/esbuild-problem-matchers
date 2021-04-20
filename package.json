@@ -1,0 +1,69 @@
+{
+  "name": "esbuild-problem-matchers",
+  "displayName": "esbuild Problem Matchers",
+  "description": "Problem matchers for esbuild tasks",
+  "publisher": "connor4312",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.55.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/connor4312/esbuild-problem-matchers/blob/master/README.md",
+  "bugs": {
+    "url": "https://github.com/connor4312/esbuild-problem-matchers/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/connor4312/esbuild-problem-matchers.git"
+  },
+  "keywords": [
+    "esbuild",
+    "problem matcher",
+    "tasks"
+  ],
+  "contributes": {
+    "problemMatchers": [
+      {
+        "name": "esbuild",
+        "label": "esbuild problem matcher",
+        "severity": "error",
+        "applyTo": "closedDocuments",
+        "source": "esbuild",
+        "fileLocation": "relative",
+        "owner": "typescript",
+        "pattern": [
+          {
+            "regexp": "> (.*?):([0-9]+):([0-9]+): (warning|error): (.+)$",
+            "file": 1,
+            "line": 2,
+            "column": 3,
+            "severity": 4,
+            "message": 5
+          }
+        ]
+      },
+      {
+        "name": "esbuild-watch",
+        "base": "$esbuild",
+        "label": "esbuild --watch problem matcher",
+        "severity": "error",
+        "applyTo": "closedDocuments",
+        "source": "esbuild",
+        "owner": "typescript",
+        "fileLocation": "relative",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "\\[watch\\] build started"
+          },
+          "endsPattern": {
+            "regexp": "\\[watch\\] build finished"
+          }
+        }
+      }
+    ]
+  }
+}
