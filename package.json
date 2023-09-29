@@ -33,7 +33,45 @@
         "applyTo": "closedDocuments",
         "source": "esbuild",
         "fileLocation": "relative",
-        "owner": "typescript",
+        "pattern": [
+          {
+            "regexp": "^[✘▲] \\[([A-Z]+)\\] (.+)",
+            "severity": 1,
+            "message": 2
+          },
+          {
+            "regexp": "^(?:\\t| {4})(?!\\s)([^:]+)(?::([0-9]+))?(?::([0-9]+))?:$",
+            "file": 1,
+            "line": 2,
+            "column": 3
+          }
+        ]
+      },
+      {
+        "name": "esbuild-watch",
+        "base": "$esbuild",
+        "label": "esbuild --watch problem matcher",
+        "severity": "error",
+        "applyTo": "closedDocuments",
+        "source": "esbuild",
+        "fileLocation": "relative",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "\\[watch\\] build started"
+          },
+          "endsPattern": {
+            "regexp": "\\[watch\\] build finished"
+          }
+        }
+      },
+      {
+        "name": "esbuild-0.13",
+        "label": "esbuild <0.14 problem matcher",
+        "severity": "error",
+        "applyTo": "closedDocuments",
+        "source": "esbuild",
+        "fileLocation": "relative",
         "pattern": [
           {
             "regexp": "> (.*?):([0-9]+):([0-9]+): (warning|error): (.+)$",
@@ -46,13 +84,12 @@
         ]
       },
       {
-        "name": "esbuild-watch",
-        "base": "$esbuild",
-        "label": "esbuild --watch problem matcher",
+        "name": "esbuild-0.13-watch",
+        "base": "$esbuild-0.13",
+        "label": "esbuild <0.14 --watch problem matcher",
         "severity": "error",
         "applyTo": "closedDocuments",
         "source": "esbuild",
-        "owner": "typescript",
         "fileLocation": "relative",
         "background": {
           "activeOnStart": true,
