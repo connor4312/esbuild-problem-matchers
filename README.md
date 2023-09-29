@@ -33,28 +33,36 @@ If you're using an esbuild version before 0.14.1, you should use the `$esbuild-0
 
 ### ESBuild via JS
 
-For this problem matcher to be picked up, you need to specify your watch `onRebuild` property to match what this problem matcher is looking for. For example:
+For this problem matcher to be picked up, you need to add a plugin property to emit the problems that the watcher is looking for. For example:
 
 ```js
-console.log('[watch] build started');
+/**
+ * @type {import('esbuild').Plugin}
+ */
+const esbuildProblemMatcherPlugin = {
+  name: 'esbuild-problem-matcher',
 
-await esbuild
-  .build({
-    ...otherOptions,
-    watch: {
-      onRebuild(error, result) {
-        console.log('[watch] build started');
-        if (error) {
-          error.errors.forEach((error) =>
-            console.error(
-              `> ${error.location.file}:${error.location.line}:${error.location.column}: error: ${error.text}`,
-            ),
-          );
-        } else console.log('[watch] build finished');
-      },
-    },
-  })
-  .then(() => {
-    console.log('[watch] build finished');
-  });
+  setup(build) {
+    build.onStart(() => {
+      console.log('[watch] build started');
+    });
+    build.onEnd((result) => {
+      result.errors.forEach(({ text, file, line, column }) => {
+        console.error(`✘ [ERROR] ${text}`);
+        console.error(`    ${location.file}:${location.line}:${location.column}`);
+      });
+
+      console.log('[watch] build finished');
+    });
+  },
+};
+
+// add the esbuildProblemMatcherPlugin to the esbuild plugins array
+await esbuild.context({
+  /* ... your options */
+  plugins: [
+    /* add to the end of plugins array */
+    esbuildProblemMatcherPlugin,
+  ],
+});
 ```
